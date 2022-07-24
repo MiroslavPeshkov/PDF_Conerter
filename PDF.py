@@ -59,7 +59,6 @@ if uploaded_file is not None:
         df_4[f'{columns_4[-1]}'] = df_4[f'{columns_4[-1]}'].apply(lambda x: str(x).replace('.', ''))
 	
 	
-	@st.cache
         def convert_df():
             # IMPORTANT: Cache the conversion to prevent computation on every rerun
             writer = pd.ExcelWriter(f'{fime_name_to_excel}.xlsx')  #
