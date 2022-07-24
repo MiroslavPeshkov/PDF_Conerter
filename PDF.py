@@ -3,6 +3,8 @@ import pandas as pd
 pd.set_option('max_rows', None)
 import streamlit as st
 import openpyxl
+from io import BytesIO
+import base64
 
 st.title('MVP')
 st.subheader("Upload PDF file finansial statment of company")
