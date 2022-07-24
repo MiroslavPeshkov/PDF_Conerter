@@ -57,9 +57,16 @@ if uploaded_file is not None:
         df_4[f'{columns_4[-1]}'] = df_4[f'{columns_4[-1]}'].apply(lambda x: str(x).replace('.', ''))
 
 
-
-
         with pd.ExcelWriter(f'{fime_name_to_excel}.xlsx') as writer:
             df_1_2.to_excel(writer, sheet_name=name_1,  index = False)
             df_3.to_excel(writer, sheet_name=name_2,  index = False)
             df_4.to_excel(writer, sheet_name=name_3, index = False)
+        
+        st.download_button('Download CSV', text_contents, 'text/xlsx')
+        st.download_button('Download CSV', text_contents)
+        
+        with open(f'{fime_name_to_excel}.xlsx') as f:
+            st.download_button('Download CSV', f)
+            
+        if st.download_button(...):
+            st.write('Thanks for downloading!')
