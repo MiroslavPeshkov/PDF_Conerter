@@ -114,4 +114,4 @@ if uploaded_file is not None:
 #             st.download_button('Download CSV', f)
             
 #         if st.download_button(...):
-            st.write('Thanks for downloading!')
+#             st.write('Thanks for downloading!')
