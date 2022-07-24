@@ -76,8 +76,7 @@ if uploaded_file is not None:
                 file_name=f'{fime_name_to_excel}.xlsx',
                 mime='text/xlsx',
         )
-	if st.download_button(...):
-            st.write('Thanks for downloading!')
+
         
         
 #         def to_excel():
