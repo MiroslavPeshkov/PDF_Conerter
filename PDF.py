@@ -171,24 +171,24 @@ st.title('MVP')
 st.subheader("Upload PDF file finansial statment of company")
 uploaded_file = st.file_uploader("Choose a file", "pdf")
 if uploaded_file is not None:
-    process = st.button("Run")
-    if process:
-        dfs = tabula.read_pdf(uploaded_file, pages = ['1-18'], multiple_tables= True, stream=True)
-        file_name = uploaded_file.name
-        fime_name_to_excel = file_name.split('.')[0]
-        name_1 = 'Balance'
-        name_2 = 'Income statement'
-        text = ''
-        for i in dfs:
-	  for j in i.values:
-	    j = str(j)
-	    text += " " +  j
+	process = st.button("Run")
+    	if process:
+        	dfs = tabula.read_pdf(uploaded_file, pages = ['1-18'], multiple_tables= True, stream=True)
+        	file_name = uploaded_file.name
+        	fime_name_to_excel = file_name.split('.')[0]
+        	name_1 = 'Balance'
+        	name_2 = 'Income statement'
+        	text = ''
+        	for i in dfs:
+	  		for j in i.values:
+	    		j = str(j)
+	    		text += " " +  j
 
-        text_detections = detect(text)
-        st.write('language - ', text_detections)
-    	if text_detections == 'nl':
-          to_excel_nitherland()
-        if text_detections == 'fr':
-	  to_excel_france()
-    	if text_detections == 'en':
-	  to_excel_english()
+        	text_detections = detect(text)
+        	st.write('language - ', text_detections)
+    		if text_detections == 'nl':
+          		to_excel_nitherland()
+        	if text_detections == 'fr':
+	  		to_excel_france()
+    		if text_detections == 'en':
+	  		to_excel_english()
