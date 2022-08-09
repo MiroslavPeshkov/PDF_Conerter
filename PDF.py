@@ -179,10 +179,10 @@ if uploaded_file is not None:
         name_1 = 'Balance'
         name_2 = 'Income statement'
         text = ''
-        for i in dfs:
-	    for j in i.values:
-	        j = str(j)
-	       	text += " " +  j
+#         for i in dfs:
+# 	    for j in i.values:
+# 	        j = str(j)
+# 	       	text += " " +  j
 
         text_detections = detect(text)
         st.write('language - ', text_detections)
