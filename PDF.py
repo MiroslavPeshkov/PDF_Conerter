@@ -1,10 +1,10 @@
 import tabula
 import pandas as pd
-pd.set_option('max_rows', None)
 import streamlit as st
 import openpyxl
 from io import BytesIO
 import base64
+from langdetect import detect
 
 
 def convert_df(fime_name_to_excel,name_1, name_2, df_balance, df_income_statement):
@@ -172,9 +172,8 @@ st.subheader("Upload PDF file finansial statment of company")
 uploaded_file = st.file_uploader("Choose a file", "pdf")
 if uploaded_file is not None:
     process = st.button("Run")
-    st.write(process)
     if process:
-        dfs = tabula.read_pdf(uploaded_file, pages = ['1-18'], multiple_tables= True)
+        dfs = tabula.read_pdf(uploaded_file, pages = ['1-18'], multiple_tables= True, stream=True)
         file_name = uploaded_file.name
         fime_name_to_excel = file_name.split('.')[0]
         name_1 = 'Balance'
