@@ -6,6 +6,169 @@ import openpyxl
 from io import BytesIO
 import base64
 
+
+def convert_df(fime_name_to_excel,name_1, name_2, df_balance, df_income_statement):
+    # IMPORTANT: Cache the conversion to prevent computation on every rerun
+    writer = pd.ExcelWriter(f'{fime_name_to_excel}.xlsx')	
+    df_balance.to_excel(writer, sheet_name=name_1, index=False)
+    df_income_statement.to_excel(writer, sheet_name=name_2, index=False)
+    st.write()
+
+    writer.save()
+
+def download(fime_name_to_excel,name_1, name_2, df_balance, df_income_statement):
+	csv = convert_df(fime_name_to_excel,name_1, name_2, df_balance, df_income_statement)
+	with open(f'{fime_name_to_excel}.xlsx', "rb") as file:
+	    st.download_button(
+		label="Download data as CSV",
+		data= file,
+		file_name=f'{fime_name_to_excel}.xlsx',
+		mime='text/xlsx',
+	)
+
+
+
+def to_excel_nitherland():
+    s = []
+    for i in range(len(dfs)):
+        df = pd.DataFrame(dfs[i])
+        columns = df.columns
+        df = df.dropna(axis='columns', how = 'all')
+        if 'Boekjaar' in columns:
+            try:
+                if 'Codes' in columns:
+                    del df['Codes']
+                if 'Toel.' in columns:
+                    del df['Toel.']
+                s.append(df)
+            except:
+                pass
+        else:
+            continue
+    s1 = []
+    pattern = re.compile('\B\+.-\B')
+    for j in range(len(s)):
+        df = pd.DataFrame(s[j])
+        df = df.fillna('')
+        columns = df.columns
+        for col in columns:
+            df[col] = df[col].apply(lambda x: str(x).replace('.', ''))
+            df[col] = df[col].apply(lambda x: str(x).replace('(', ''))
+            df[col] = df[col].apply(lambda x: str(x).replace(')', ''))
+            val = df[col].str.match(pattern)
+            if True in list(val):
+                print(df[col])
+                del df[col] 
+            else:
+                continue
+        s1.append(df) 
+    list1 = []
+    for item in s1:
+        for info in item.values:
+            list1.append(info)
+    df = pd.DataFrame(list1)
+    df = df.fillna('')
+    a =  df.iloc[:, 0].str.contains('TOTAAL VAN DE PASSIVA', regex = False) 
+    b =  df.iloc[:, 0].str.contains('Te bestemmen winst verlies van het boekjaar', regex = False) 
+    index = a[a == True].index[0]
+    index_1 = b[b == True].index[0]
+    df_balance = df.iloc[:index + 1]
+    df_income_statement = df.iloc[index + 1:index_1 + 1]
+    print(download(fime_name_to_excel,name_1, name_2, df_balance, df_income_statement))
+
+def to_excel_france():
+    s = []
+    for i in range(len(dfs)):
+        df = pd.DataFrame(dfs[i])
+        columns = df.columns
+        df = df.dropna(axis='columns', how = 'all')
+        if 'Exercice' in columns:
+            if 'Codes' in columns:
+                del df['Codes']
+            if 'Ann.' in columns:
+                del df['Ann.']
+            s.append(df)
+        else:
+            continue
+    s1 = []
+    pattern = re.compile('\B\+.-\B')
+    for j in range(len(s)):
+        df = pd.DataFrame(s[j])
+        df = df.fillna('')
+        columns = df.columns
+        for col in columns:
+            df[col] = df[col].apply(lambda x: str(x).replace('.', ''))
+            df[col] = df[col].apply(lambda x: str(x).replace('(', ''))
+            df[col] = df[col].apply(lambda x: str(x).replace(')', ''))
+            val = df[col].str.match(pattern)
+            if True in list(val):
+                del df[col] 
+            else:
+                continue
+        s1.append(df)  
+        
+    list1 = []
+    for item in s1:
+        for info in item.values:
+            list1.append(info)
+    df = pd.DataFrame(list1)
+    df = df.fillna('')
+    
+    a =  df.iloc[:, 0].str.contains('TOTAL DU PASSIF', regex = False) 
+    b =  df.iloc[:, 0].str.contains("Bénéfice Perte de l'exercice à affecter", regex = False) 
+    index = a[a == True].index[0]
+    index_1 = b[b == True].index[0]
+    df_balance = df.iloc[:index + 1]
+    df_income_statement = df.iloc[index + 1:index_1 + 1]
+    print(download(fime_name_to_excel,name_1, name_2,df_balance, df_income_statement))
+	
+def to_excel_english():
+    s = []
+    for i in range(len(dfs)):
+        df = pd.DataFrame(dfs[i])
+        columns = df.columns
+        df = df.dropna(axis='columns', how = 'all')
+        if 'Period' in columns:
+            if 'Codes' in columns:
+                del df['Codes']
+            if 'Discl.' in columns:
+                del df['Discl.']
+            s.append(df)
+        else:
+            continue
+    s1 = []
+    pattern = re.compile('\B\+.-\B')
+    for j in range(len(s)):
+        df = pd.DataFrame(s[j])
+        df = df.fillna('')
+        columns = df.columns
+        for col in columns:
+            df[col] = df[col].apply(lambda x: str(x).replace('.', ''))
+            df[col] = df[col].apply(lambda x: str(x).replace('(', ''))
+            df[col] = df[col].apply(lambda x: str(x).replace(')', ''))
+            val = df[col].str.match(pattern)
+            if True in list(val):
+                del df[col] 
+            else:
+                continue
+        s1.append(df)  
+        
+    list1 = []
+    for item in s1:
+        for info in item.values:
+            list1.append(info)
+    df = pd.DataFrame(list1)
+    df = df.fillna('')
+    
+    a =  df.iloc[:, 0].str.contains('TOTAL ASSETS', regex = False) 
+    b =  df.iloc[:, 0].str.contains("Gain loss of the period available for appropriation", regex = False) 
+    index = a[a == True].index[0]
+    index_1 = b[b == True].index[0]
+    df_balance = df.iloc[:index + 1]
+    df_income_statement = df.iloc[index + 1:index_1 + 1]
+    print(download(fime_name_to_excel,name_1, name_2, df_balance, df_income_statement))
+    
+    
 st.title('MVP')
 st.subheader("Upload PDF file finansial statment of company")
 uploaded_file = st.file_uploader("Choose a file", "pdf")
@@ -14,126 +177,25 @@ if uploaded_file is not None:
     process = st.button("Run")
     st.write(process)
     if process:
-        dfs = tabula.read_pdf(uploaded_file, pages = ['6-10'], multiple_tables= True)
+        dfs = tabula.read_pdf(uploaded_file, pages = ['1-18'], multiple_tables= True)
 
         file_name = uploaded_file.name
         fime_name_to_excel = file_name.split('.')[0]
 
-        name_1 = 'BILAN APRÈS RÉPARTITION'
-        name_2 = 'COMPTE DE RÉSULTATS'
-        name_3 = 'AFFECTATIONS ET PRÉLÈVEMENTS'
+        name_1 = 'Balance'
+        name_2 = 'Income statement'
 
-        df_1 = dfs[1]
-        columns_1 = df_1.columns
-        del df_1[f'{columns_1[1]}']
-        df_1 = df_1.rename(columns={'Unnamed: 0': f'{name_1}'})
-        df_1 = df_1.fillna('')
-        df_1[f'{columns_1[-2]}'] = df_1[f'{columns_1[-2]}'].apply(lambda x: str(x).replace('.', ''))
-        df_1[f'{columns_1[-1]}'] = df_1[f'{columns_1[-1]}'].apply(lambda x: str(x).replace('.', ''))
+        text = ''
+        for i in dfs:
+	    for j in i.values:
+	        j = str(j)
+	        text += " " +  j
 
-        df_2 = dfs[3]
-        columns_2 = df_2.columns
-        del df_2[f'{columns_2[1]}']
-        del df_2[f'{columns_2[2]}']
-        df_2 = df_2.rename(columns={'Unnamed: 0': f'{name_1}'})
-        df_2 = df_2.fillna('')
-        df_2[f'{columns_2[-2]}'] = df_2[f'{columns_2[-2]}'].apply(lambda x: str(x).replace('.', ''))
-        df_2[f'{columns_2[-1]}'] = df_2[f'{columns_2[-1]}'].apply(lambda x: str(x).replace('.', ''))
-
-        df_1_2 = pd.concat([df_1, df_2])
-
-        df_3 = dfs[5]
-        columns_3 = df_3.columns
-        del df_3[f'{columns_3[1]}']
-        df_3 = df_3.rename(columns={'Unnamed: 0': f'{name_2}'})
-        df_3 = df_3.fillna('')
-        df_3[f'{columns_3[-2]}'] = df_3[f'{columns_3[-2]}'].apply(lambda x: str(x).replace('.', ''))
-        df_3[f'{columns_3[-1]}'] = df_3[f'{columns_3[-1]}'].apply(lambda x: str(x).replace('.', ''))
-
-        df_4 = dfs[7]
-        columns_4 = df_4.columns
-        del df_4[f'{columns_4[1]}']
-        df_4 = df_4.rename(columns={'Unnamed: 0': f'{name_3}'})
-        df_4 = df_4.fillna('')
-        df_4[f'{columns_4[-2]}'] = df_4[f'{columns_4[-2]}'].apply(lambda x: str(x).replace('.', ''))
-        df_4[f'{columns_4[-1]}'] = df_4[f'{columns_4[-1]}'].apply(lambda x: str(x).replace('.', ''))
-	
-	
-        def convert_df():
-            # IMPORTANT: Cache the conversion to prevent computation on every rerun
-            writer = pd.ExcelWriter(f'{fime_name_to_excel}.xlsx')  #
-            df_1_2.to_excel(writer, sheet_name=name_1, index=False)
-            df_3.to_excel(writer, sheet_name=name_2, index=False)
-            df_4.to_excel(writer, sheet_name=name_3, index=False)
-
-            writer.save()
-
-        csv = convert_df()
-        with open(f'{fime_name_to_excel}.xlsx', "rb") as file:
-            st.download_button(
-                label="Download data as CSV",
-                data= file,
-                file_name=f'{fime_name_to_excel}.xlsx',
-                mime='text/xlsx',
-        )
-
-        
-        
-#         def to_excel():
-
-#             output = BytesIO()
-#             writer = pd.ExcelWriter(f'{fime_name_to_excel}.xlsx', engine='xlsxwriter')
-#             df_1_2.to_excel(writer, sheet_name=name_1,  index = False)
-#             df_3.to_excel(writer, sheet_name=name_2,  index = False)
-#             df_4.to_excel(writer, sheet_name=name_3, index = False)
-
-#             writer.save()
-
-#             processed_data = output.getvalue()
-
-#             return processed_data
-
-
-#         def get_table_download_link():
-
-#             val = to_excel()
-
-#             b64 = base64.b64encode(val) 
-
-#             file_name = f'{fime_name_to_excel}.xlsx'
-
-
-#             return f'<a href="data:application/octet-stream;base64,{b64.decode()}" download="{file_name}">Download Excel file</a>' 
-        
-        
-#         st.markdown(get_table_download_link(), unsafe_allow_html=True)
-
-
-#         with pd.ExcelWriter(f'{fime_name_to_excel}.xlsx') as writer:
-#             df_1_2.to_excel(writer, sheet_name=name_1,  index = False)
-#             df_3.to_excel(writer, sheet_name=name_2,  index = False)
-#             df_4.to_excel(writer, sheet_name=name_3, index = False)
-            
-#         def to_excel():
-
-#             output = BytesIO()
-
-#             writer = pd.ExcelWriter(output, engine='xlsxwriter')
-	    
-# 	        writer.save()
-
-#             processed_data = output.getvalue()
-
-#             return processed_data 
-        
-        
-
-        
-#         st.download_button('Download CSV', text_contents, 'text/xlsx')
-#         st.download_button('Download CSV', text_contents)
-        
-#         with open(f'{fime_name_to_excel}.xlsx') as f:
-#             st.download_button('Download CSV', f)
-            
-#         if st.download_button(...):
-#             st.write('Thanks for downloading!')
+        text_detections = detect(text)
+        st.write('language - ', text_detections)
+    	if text_detections == 'nl':
+            to_excel_nitherland()
+        if text_detections == 'fr':
+	    to_excel_france()
+    	if text_detections == 'en':
+	    to_excel_english()
