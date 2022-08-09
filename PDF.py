@@ -181,8 +181,8 @@ if uploaded_file is not None:
         text = ''
         for i in dfs:
 	  for j in i.values:
-		j = str(j)
-	       	text += " " +  j
+	    j = str(j)
+	    text += " " +  j
 
         text_detections = detect(text)
         st.write('language - ', text_detections)
