@@ -172,19 +172,15 @@ def to_excel_english():
 st.title('MVP')
 st.subheader("Upload PDF file finansial statment of company")
 uploaded_file = st.file_uploader("Choose a file", "pdf")
-
 if uploaded_file is not None:
     process = st.button("Run")
     st.write(process)
     if process:
         dfs = tabula.read_pdf(uploaded_file, pages = ['1-18'], multiple_tables= True)
-
         file_name = uploaded_file.name
         fime_name_to_excel = file_name.split('.')[0]
-
         name_1 = 'Balance'
         name_2 = 'Income statement'
-
         text = ''
         for i in dfs:
 	    for j in i.values:
