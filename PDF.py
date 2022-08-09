@@ -187,8 +187,8 @@ if uploaded_file is not None:
         text_detections = detect(text)
         st.write('language - ', text_detections)
     	if text_detections == 'nl':
-            to_excel_nitherland()
+          to_excel_nitherland()
         if text_detections == 'fr':
-	    to_excel_france()
+	  to_excel_france()
     	if text_detections == 'en':
-	    to_excel_english()
+	  to_excel_english()
