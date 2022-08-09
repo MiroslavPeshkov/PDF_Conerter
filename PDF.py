@@ -19,11 +19,12 @@ def convert_df(fime_name_to_excel,name_1, name_2, df_balance, df_income_statemen
 def download(fime_name_to_excel,name_1, name_2, df_balance, df_income_statement):
     csv = convert_df(fime_name_to_excel,name_1, name_2, df_balance, df_income_statement)
     with open(f'{fime_name_to_excel}.xlsx', "rb") as file:
-	st.download_button(
+        st.download_button(
 	    label="Download data as CSV",
 	    data= file,
 	    file_name=f'{fime_name_to_excel}.xlsx',
-	    mime='text/xlsx')
+	    mime='text/xlsx',
+	)
 
 def to_excel_nitherland():
     s = []
