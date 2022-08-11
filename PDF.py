@@ -34,7 +34,8 @@ def to_excel_nitherland():
     for i in range(len(dfs)):
         df = pd.DataFrame(dfs[i])
         columns = df.columns
-        df = df.dropna(axis='columns', how='all')
+        if len(df) > 1:
+            df = df.dropna(axis='columns', how='all')
         if 'Boekjaar' in columns:
             try:
                 if 'Codes' in columns:
@@ -83,7 +84,8 @@ def to_excel_france():
     for i in range(len(dfs)):
         df = pd.DataFrame(dfs[i])
         columns = df.columns
-        df = df.dropna(axis='columns', how='all')
+        if len(df) > 1:
+            df = df.dropna(axis='columns', how='all')
         if 'Exercice' in columns:
             if 'Codes' in columns:
                 del df['Codes']
@@ -130,7 +132,8 @@ def to_excel_english():
     for i in range(len(dfs)):
         df = pd.DataFrame(dfs[i])
         columns = df.columns
-        df = df.dropna(axis='columns', how='all')
+        if len(df) > 1:
+            df = df.dropna(axis='columns', how='all')
         if 'Period' in columns:
             if 'Codes' in columns:
                 del df['Codes']
